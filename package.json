@@ -1,0 +1,8 @@
+{
+  "name": "uptime-pinger",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "ping": "node scripts/ping.js" },
+  "engines": { "node": ">=20" }
+}
