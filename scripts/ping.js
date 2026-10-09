@@ -147,18 +147,29 @@ for (const id of Object.keys(state)) if (!endpoints.some((e) => e.id === id)) de
 fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2) + "\n");
 
 /* ---------- README table (URLs and secrets are never written here) ---------- */
-const fmt = (ms) => new Date(ms).toISOString().replace("T", " ").slice(0, 16) + " UTC";
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const pad = (n) => String(n).padStart(2, "0");
+const nb = (s) => String(s).replaceAll(" ", "\u00A0"); // non-breaking spaces keep cells on one line
+
+const fmt = (ms) => {
+  const d = new Date(ms);
+  return nb(`${pad(d.getUTCDate())} ${MONTHS[d.getUTCMonth()]}, ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`);
+};
+
 const rows = endpoints.map((e) => {
   const s = state[e.id];
-  const expr = e.cronjob ?? e.cornjob ?? "-";
-  if (!s) return `| ${e.id} | ${e.name} | ⚪ Pending | - | - | - | \`${expr}\` |`;
-  return redact(`| ${e.id} | ${e.name} | ${s.ok ? "🟢 Up" : "🔴 Down"} | ${s.code ?? s.error} | ${s.ms} ms | ${fmt(s.checkedAt)} | \`${expr}\` |`);
+  if (!s) return `| ${e.id} | ${e.name} | ${nb("⚪ Pending")} | - | - |`;
+  const status = s.ok ? "🟢 Up" : "🔴 Down";
+  const info = s.ok ? `${s.ms} ms` : (s.code ?? s.error);
+  return redact(`| ${e.id} | ${e.name} | ${nb(status)} | ${nb(info)} | ${fmt(s.checkedAt)} |`);
 });
 
 const table = [
-  "| ID | Name | Status | Code | Response | Last checked | Schedule |",
-  "|----|------|--------|------|----------|--------------|----------|",
+  "| ID | Name | Status | Response | Checked |",
+  "|:--:|:-----|:------:|:--------:|:-------:|",
   ...rows,
+  "",
+  "<sub>Times are in UTC</sub>",
 ].join("\n");
 
 let readme = fs.readFileSync(README_FILE, "utf8");
