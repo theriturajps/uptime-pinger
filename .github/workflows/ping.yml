@@ -1,0 +1,55 @@
+name: Ping endpoints
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # GitHub's minimum; precise per-endpoint timing is handled inside the script
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Ping all endpoints once, right now, ignoring schedules"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write   # commit the README table
+  actions: write    # keep this scheduled workflow from being auto-disabled
+
+# Only one run at a time, so runs never collide on the README/status commit.
+concurrency:
+  group: ping
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      # Resets GitHub's 60-day inactivity timer for scheduled workflows.
+      - name: Keep schedule enabled
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/ping.yml/enable"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Ping endpoints
+        run: node scripts/ping.js
+        env:
+          FORCE: ${{ github.event.inputs.force == 'true' }}
+          SECRETS_JSON: ${{ toJSON(secrets) }}   # lets endpoints.js use {{SECRET_NAME}} placeholders
+
+      - name: Commit status
+        run: |
+          git config user.name  "theriturajps"
+          git config user.email "107362757+theriturajps@users.noreply.github.com"
+          git add README.md status.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update status"
+            git pull --rebase
+            git push
+          fi
