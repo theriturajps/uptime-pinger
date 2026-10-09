@@ -5,9 +5,11 @@ Free, serverless endpoint monitor built on GitHub Actions. It pings the URLs lis
 ## Status
 
 <!-- STATUS:START -->
-| ID | Name | Status | Code | Response | Last checked | Schedule |
-|----|------|--------|------|----------|--------------|----------|
-| 01 | inoob | 🟢 Up | 200 | 431 ms | 2026-10-09 00:16 UTC | `*/10 * * * *` |
+| ID | Name | Status | Response | Checked |
+|:--:|:-----|:------:|:--------:|:-------:|
+| 01 | inoob | 🟢 Up | 434 ms | 09 Oct, 00:25 |
+
+<sub>Times are in UTC</sub>
 <!-- STATUS:END -->
 
 ## Setup
