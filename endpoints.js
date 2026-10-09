@@ -17,6 +17,6 @@
 // Secret values are never printed to logs or written to the README.
 
 export default [
-  { id: "01", name: "backend 1", cronjob: "*/14 * * * *", endpoint: "https://letnote-api.koyeb.app/health" },
+  { id: "01", name: "inoob", cronjob: "*/10 * * * *", endpoint: "https://inoob.koyeb.app" },
   // { id: "02", name: "backend 2", cronjob: "*/10 * * * *", endpoint: "https://example.com/health" },
 ];
