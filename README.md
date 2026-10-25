@@ -7,7 +7,7 @@ Free, serverless endpoint monitor built on GitHub Actions. It pings the URLs lis
 <!-- STATUS:START -->
 | ID | Name | Status | Response | Checked |
 |:--:|:-----|:------:|:--------:|:-------:|
-| 01 | inoob | 🟢 Up | 416 ms | 25 Oct, 17:24 |
+| 01 | inoob | 🟢 Up | 412 ms | 25 Oct, 19:52 |
 
 <sub>Times are in UTC</sub>
 <!-- STATUS:END -->
