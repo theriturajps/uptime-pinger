@@ -2,9 +2,9 @@
   "01": {
     "ok": true,
     "code": 200,
-    "ms": 141,
+    "ms": 255,
     "error": null,
-    "checkedAt": 1794763806489,
+    "checkedAt": 1794780022610,
     "since": 1792870840879
   }
 }
